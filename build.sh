@@ -6,7 +6,7 @@ target="aarch64"  # 可选值：x86_64, aarch64
 outdir="arm64-v8a"  # 可选值：x86_64, arm64-v8a
 
 # 设置 OHOS_NATIVE_HOME
-OHOS_NATIVE_HOME="downloads/command-line-tools/sdk/default/openharmony/native"
+OHOS_NATIVE_HOME="command-line-tools/sdk/default/openharmony/native"
 
 # 基础编译标志
 BASE_FLAGS="-Wno-error --sysroot=$OHOS_NATIVE_HOME/sysroot "
@@ -34,10 +34,3 @@ outputFile="./output/libohtest.so"
 
 # 构建命令，生成共享库
 go build -buildmode c-shared -tags "ohos" -gcflags="all=-N -l" -o $outputFile $sourceFile
-
-# 检查编译结果
-if [ -f "$outputFile" ]; then
-    echo "success: $outputFile"
-else
-    echo "failed"
-fi
