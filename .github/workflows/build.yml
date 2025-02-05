@@ -1,0 +1,63 @@
+name: 构建测试
+
+on:
+  workflow_dispatch:  # 手动触发
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 下载 Go
+      uses: actions/download-artifact@v4
+      with:
+        name: go-build
+        path: downloads/go
+        github-token: ${{ secrets.GH_PAT }}
+        run-id: 13149385502
+
+    - name: 下载 OpenHarmony CommandLine
+      uses: actions/download-artifact@v4
+      with:
+        name: commandline-tools
+        path: downloads/tools
+        github-token: ${{ secrets.GH_PAT }}
+        run-id: 13149180954
+
+    - name: 解压文件
+      run: |
+        cd downloads
+        echo "=== 解压 Go ==="
+        unzip go-build.zip
+        
+        echo -e "\n=== OpenHarmony CommandLine ==="
+        unzip commandline-tools.zip
+
+    - name: 配置环境变量
+      run: |
+        echo "GOROOT=${{ github.workspace }}/downloads/go-build" >> $GITHUB_ENV
+        echo "${{ github.workspace }}/downloads/go-build/bin" >> $GITHUB_PATH
+        which go
+        go env GOROOT
+        go env GOOS GOARCH
+
+        echo "AR=${{ github.workspace }}/commandline-tools/sdk/default/openharmony/native/llvm/bin/llvm-ar" >> $GITHUB_ENV
+        echo "CC=${{ github.workspace }}/commandline-tools/sdk/default/openharmony/native/llvm/bin/aarch64-unknown-linux-ohos-clang" >> $GITHUB_ENV
+        echo "CXX=${{ github.workspace }}/commandline-tools/sdk/default/openharmony/native/llvm/bin/unknown-linux-ohos-clang++" >> $GITHUB_ENV
+        echo "GOOS=openharmony >> $GITHUB_ENV
+        echo "GOARCH=arm64 >> $GITHUB_ENV
+        echo "CGO_ENABLED=1 >> $GITHUB_ENV
+
+    - name: 构建二进制
+      run: |
+        go build -buildmode c-shared -gcflags="all=-N -l" -o ./output/libohtest.so main.go
+
+    - name: 压缩并归档构建产物
+      run: |
+        zip -r assets.zip output
+      
+    - name: 上传构建产物
+      uses: actions/upload-artifact@v4
+      with:
+        name: assets
+        path: assets.zip
