@@ -46,9 +46,8 @@ jobs:
         cd golang
         ls -l
         cd ../../
-        
-        echo "GOROOT=${{ github.workspace }}/temp/golang" >> $GITHUB_ENV
-        echo "${{ github.workspace }}/temp/golang/bin" >> $GITHUB_PATH
+
+        go env -w GOROOT=${{ github.workspace }}/temp/golang
 
         go env
 
@@ -75,7 +74,7 @@ jobs:
         echo "sourceFile=./" >> $GITHUB_ENV
         echo "outputFile=./output/libohtest.so" >> $GITHUB_ENV
 
-        go build -buildmode c-shared -tags "ohos" -gcflags="all=-N -l" -o $outputFile $sourceFile
+        ${{ github.workspace }}/temp/golang/bin/go build -buildmode c-shared -tags "ohos" -gcflags="all=-N -l" -o $outputFile $sourceFile
 
     - name: 压缩构建产物
       run: |
