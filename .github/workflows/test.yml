@@ -20,14 +20,14 @@ jobs:
     - name: 下载 Go 构建文件
       uses: actions/download-artifact@v4
       with:
-        name: go-build.zip
+        name: go-build
         run-id: ${{ github.event.inputs.go_run_id }}
         path: downloads/go
 
     - name: 下载命令行工具
       uses: actions/download-artifact@v4
       with:
-        name: commandline-tools.zip
+        name: commandline-tools
         run-id: ${{ github.event.inputs.tools_run_id }}
         path: downloads/tools
 
