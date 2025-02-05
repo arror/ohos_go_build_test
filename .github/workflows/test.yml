@@ -1,59 +1,36 @@
-name: 测试 Golang 能否在 OpenHarmony 上运行
+name: 构建测试文件
 
 on:
-  workflow_dispatch:
-    inputs:
-      go_url:
-        description: 'Go 下载链接'
-        required: true
-        type: string
-      tools_url:
-        description: '命令行工具下载链接'
-        required: true
-        type: string
+  workflow_dispatch:  # 手动触发
 
 jobs:
   setup:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 下载并配置 Go
-      run: |
-        wget -O Go.zip "${{ github.event.inputs.go_url }}"
-        unzip Go.zip
-        echo "GOROOT=${{ github.workspace }}/go" >> $GITHUB_ENV
-        echo "${{ github.workspace }}/go/bin" >> $GITHUB_PATH
+    - name: 下载 Go 构建文件
+      uses: actions/download-artifact@v4
+      with:
+        name: go-build
+        path: downloads/go
 
-    - name: 验证 Go 安装
-      run: |
-        which go
-        go env GOROOT
-        go env GOOS GOARCH
-        
-    - name: 下载并配置命令行工具
-      run: |
-        wget -O tools.zip "${{ github.event.inputs.tools_url }}"
-        unzip tools.zip -d command-line-tools
-        echo "AR=${{ github.workspace }}/command-line-tools/sdk/default/openharmony/native/llvm/bin/llvm-ar" >> $GITHUB_ENV
-        echo "CC=${{ github.workspace }}/command-line-tools/sdk/default/openharmony/native/llvm/bin/aarch64-unknown-linux-ohos-clang" >> $GITHUB_ENV
-        echo "CXX=${{ github.workspace }}/command-line-tools/sdk/default/openharmony/native/llvm/bin/aarch64-unknown-linux-ohos-clang++" >> $GITHUB_ENV
-        echo "GOOS=openharmony" >> $GITHUB_ENV
-        echo "GOARCH=arm64" >> $GITHUB_ENV
-        echo "CGO_ENABLED=1" >> $GITHUB_ENV
+    - name: 下载命令行工具
+      uses: actions/download-artifact@v4
+      with:
+        name: commandline-tools
+        path: downloads/tools
 
-    - name: 安装 tree 命令
+    - name: 解压文件
       run: |
-        sudo apt-get update
-        sudo apt-get install -y tree
+        echo "=== 解压 Go 构建文件 ==="
+        cd downloads/go
+        unzip go-build.zip
+        
+        echo -e "\n=== 解压命令行工具 ==="
+        cd ../tools
+        unzip commandline-tools.zip
 
-    - name: 打印当前目录结构
+    - name: 打印目录结构
       run: |
-        echo "=== 工作目录结构 ==="
-        pwd
-        tree -a -L 3    # -a 显示所有文件（包括隐藏文件），-L 3 显示3层深度
-        
-        echo -e "\n=== 详细信息 ==="
-        tree -a -L 3 -h    # -h 显示文件大小
-        
-        echo -e "\n=== 完整目录树 ==="
-        tree -a            # 显示完整的目录树
+        echo "=== 文件结构 ==="
+        tree -L 3 downloads/
