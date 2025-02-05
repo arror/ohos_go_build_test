@@ -46,14 +46,7 @@ jobs:
         go env GOROOT
         go env GOOS GOARCH
         
-        echo "AR=${{ github.workspace }}/downloads/command-line-tools/sdk/default/openharmony/native/llvm/bin/llvm-ar" >> $GITHUB_ENV
-        echo "CC=${{ github.workspace }}/downloads/command-line-tools/sdk/default/openharmony/native/llvm/bin/aarch64-unknown-linux-ohos-clang" >> $GITHUB_ENV
-        echo "CXX=${{ github.workspace }}/downloads/command-line-tools/sdk/default/openharmony/native/llvm/bin/unknown-linux-ohos-clang++" >> $GITHUB_ENV
-        echo "GOOS=openharmony" >> $GITHUB_ENV
-        echo "GOARCH=arm64" >> $GITHUB_ENV
-        echo "CGO_ENABLED=1" >> $GITHUB_ENV
-        
-        go build -buildmode c-shared -gcflags="all=-N -l" -o ./output/libohtest.so main.go
+        ./build.sh
 
     - name: 压缩构建产物
       run: |
