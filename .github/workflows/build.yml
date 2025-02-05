@@ -8,10 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: FIRST
-      run: |
-        pwd
-        exit 1
     - name: 下载当前源码
       uses: actions/checkout@v3
 
@@ -53,9 +49,9 @@ jobs:
     - name: 构建二进制
       run: |
 
-        # chmod +x ./build.sh
+        chmod +x ./build.sh
 
-        # ./build.sh
+        ./build.sh
         
         # echo "arch=arm64" >> $GITHUB_ENV
         # echo "target=aarch64" >> $GITHUB_ENV
