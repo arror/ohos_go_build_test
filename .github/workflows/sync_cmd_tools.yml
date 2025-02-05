@@ -7,12 +7,7 @@ on:
         description: '下载链接'
         required: true
         type: string
-      file_name:
-        description: '保存的文件名'
-        required: true
-        type: string
-        default: 'commandline-tools.zip'
-
+        
 jobs:
   download:
     runs-on: ubuntu-latest
@@ -21,10 +16,10 @@ jobs:
 
     - name: 下载文件
       run: |
-        wget -O "${{ github.event.inputs.file_name }}" "${{ github.event.inputs.download_url }}"
+        wget -O commandline-tools.zip "${{ github.event.inputs.download_url }}"
         
     - name: 上传文件
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.inputs.file_name }}
+        name: commandline-tools
         path: ${{ github.event.inputs.file_name }}
