@@ -9,4 +9,4 @@ export GOOS=openharmony
 export GOARCH=arm64
 export CGO_ENABLED=1
 
-go build -tls=GD -buildmode c-shared -o ./output/libohtest.so ./
+go build -buildmode c-shared -o ./output/libohtest.so ./
