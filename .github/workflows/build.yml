@@ -39,6 +39,8 @@ jobs:
 
         pwd
 
+        ls -l
+
         cd temp
         ls -l
         cd golang
