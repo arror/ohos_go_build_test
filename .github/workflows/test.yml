@@ -20,7 +20,7 @@ jobs:
     - name: 下载 Go 构建文件
       uses: actions/download-artifact@v4
       with:
-        name: go-build
+        name: ${{ github.event.inputs.go_run_id }}
         run-id: ${{ github.event.inputs.go_run_id }}
         path: downloads/go
 
