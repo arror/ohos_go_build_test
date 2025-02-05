@@ -18,17 +18,7 @@ jobs:
       working-directory: go-source
       run: |
         cd src
-        GOOS=linux GOARCH=amd64 ./make.bash
-      
-    - name: 配置 Go 环境变量
-      run: |
-        echo "GOROOT=${{ github.workspace }}/go-source" >> $GITHUB_ENV
-        echo "${{ github.workspace }}/go-source/bin" >> $GITHUB_PATH
-    - name: 验证 Go 安装
-      run: |
-        which go
-        go env GOROOT
-        go env GOOS GOARCH
+        ./make.bash
 
     - name: 下载 OpenHarmony CommandLine
       uses: actions/download-artifact@v4
@@ -49,12 +39,20 @@ jobs:
         
     - name: 构建二进制
       run: |
+        echo "GOROOT=${{ github.workspace }}/go-source" >> $GITHUB_ENV
+        echo "${{ github.workspace }}/go-source/bin" >> $GITHUB_PATH
+        
+        which go
+        go env GOROOT
+        go env GOOS GOARCH
+        
         echo "AR=${{ github.workspace }}/downloads/command-line-tools/sdk/default/openharmony/native/llvm/bin/llvm-ar" >> $GITHUB_ENV
         echo "CC=${{ github.workspace }}/downloads/command-line-tools/sdk/default/openharmony/native/llvm/bin/aarch64-unknown-linux-ohos-clang" >> $GITHUB_ENV
         echo "CXX=${{ github.workspace }}/downloads/command-line-tools/sdk/default/openharmony/native/llvm/bin/unknown-linux-ohos-clang++" >> $GITHUB_ENV
         echo "GOOS=openharmony" >> $GITHUB_ENV
         echo "GOARCH=arm64" >> $GITHUB_ENV
         echo "CGO_ENABLED=1" >> $GITHUB_ENV
+        
         go build -buildmode c-shared -gcflags="all=-N -l" -o ./output/libohtest.so main.go
 
     - name: 压缩构建产物
