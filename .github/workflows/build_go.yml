@@ -8,22 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 打印平台信息
-      run: |
-        echo "=== 系统信息 ==="
-        uname -a
-        
-        echo -e "\n=== CPU 信息 ==="
-        lscpu | grep -E "Architecture|CPU(s)|Model name|Thread|Core|Socket"
-        
-        echo -e "\n=== 内存信息 ==="
-        free -h
-        
-        echo -e "\n=== 系统架构 ==="
-        arch
-        
-        echo -e "\n=== 操作系统版本 ==="
-        cat /etc/os-release
 
     - name: 下载 Go 源码仓库
       uses: actions/checkout@v3
@@ -56,5 +40,5 @@ jobs:
     - name: 上传构建产物
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.run_id }}
+        name: go-build
         path: go-source/go-build.zip
