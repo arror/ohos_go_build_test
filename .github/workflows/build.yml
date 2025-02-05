@@ -45,6 +45,8 @@ jobs:
         which go
         go env GOROOT
         go env GOOS GOARCH
+
+        chmod +x ./build.sh
         
         ./build.sh
 
