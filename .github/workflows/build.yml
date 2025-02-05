@@ -36,20 +36,13 @@ jobs:
         
     - name: 构建二进制
       run: |
+        
+        echo "GOROOT=${{ github.workspace }}/temp/golang" >> $GITHUB_ENV
+        echo "${{ github.workspace }}/temp/golang/bin" >> $GITHUB_PATH
 
-        pwd
-
-        ls -l
-
-        cd temp
-        ls -l
-        cd golang
-        ls -l
-        cd ../../
-
-        go env -w GOROOT=${{ github.workspace }}/temp/golang
-
-        go env
+        which go
+        go env GOROOT
+        go env GOOS GOARCH
 
         echo "arch=arm64" >> $GITHUB_ENV
         echo "target=aarch64" >> $GITHUB_ENV
@@ -74,7 +67,9 @@ jobs:
         echo "sourceFile=./" >> $GITHUB_ENV
         echo "outputFile=./output/libohtest.so" >> $GITHUB_ENV
 
-        ${{ github.workspace }}/temp/golang/bin/go build -buildmode c-shared -tags "ohos" -gcflags="all=-N -l" -o $outputFile $sourceFile
+        echo $GITHUB_ENV
+
+        go build -buildmode c-shared -tags "ohos" -gcflags="all=-N -l" -o $outputFile $sourceFile
 
     - name: 压缩构建产物
       run: |
