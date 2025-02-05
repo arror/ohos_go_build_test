@@ -44,6 +44,9 @@ jobs:
         echo -e "\n=== OpenHarmony CommandLine ==="
         unzip commandline-tools.zip
 
+    - name: 下载当前源码
+      uses: actions/checkout@v3
+        
     - name: 构建二进制
       run: |
         echo "AR=${{ github.workspace }}/downloads/command-line-tools/sdk/default/openharmony/native/llvm/bin/llvm-ar" >> $GITHUB_ENV
