@@ -22,14 +22,16 @@ jobs:
       with:
         name: ${{ github.event.inputs.go_run_id }}
         path: downloads/go
+        github-token: ${{ secrets.GH_PAT }}
         run-id: ${{ github.event.inputs.go_run_id }}
 
     - name: 下载命令行工具
       uses: actions/download-artifact@v4
       with:
         name: commandline-tools
-        run-id: ${{ github.event.inputs.tools_run_id }}
         path: downloads/tools
+        github-token: ${{ secrets.GH_PAT }}
+        run-id: ${{ github.event.inputs.tools_run_id }}
 
     - name: 解压文件
       run: |
