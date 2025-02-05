@@ -10,45 +10,53 @@ jobs:
     steps:
     - name: 下载当前源码
       uses: actions/checkout@v3
-      
-    - name: 下载 Golang
-      uses: actions/download-artifact@v4
+
+    - name: 下载 Go 源码仓库
+      uses: actions/checkout@v3
       with:
-        name: go-build
-        path: temp/golang
-        github-token: ${{ secrets.GH_PAT }}
-        run-id: 13149385502
+        repository: arror/golang
+        path: go-source
+
+    - name: 从源码构建 Go
+      working-directory: go-source
+      run: |
+        cd src
+        ./make.bash
+      
+    - name: 配置 Go 环境变量
+      run: |
+        echo "GOROOT=${{ github.workspace }}/go-source" >> $GITHUB_ENV
+        echo "${{ github.workspace }}/go-source/bin" >> $GITHUB_PATH
+
+    - name: 验证 Go 安装
+      run: |
+        which go
+        go env GOROOT
+        go env GOOS GOARCH
         
     - name: 下载 OpenHarmony CommandLine
       uses: actions/download-artifact@v4
       with:
         name: commandline-tools
-        path: temp/tools
         github-token: ${{ secrets.GH_PAT }}
         run-id: 13149180954
 
     - name: 解压
       run: |
-        cd temp/golang
-        unzip go-build.zip
-        cd ../tools
         unzip commandline-tools.zip
+        ls -l
+        cd commandline-tools
+        ls -l
+      
         
     - name: 构建二进制
       run: |
-        
-        echo "GOROOT=${{ github.workspace }}/temp/golang" >> $GITHUB_ENV
-        echo "${{ github.workspace }}/temp/golang/bin" >> $GITHUB_PATH
-
-        which go
-        go env GOROOT
-        go env GOOS GOARCH
 
         echo "arch=arm64" >> $GITHUB_ENV
         echo "target=aarch64" >> $GITHUB_ENV
         echo "outdir=arm64-v8a" >> $GITHUB_ENV
 
-        echo "OHOS_NATIVE_HOME=${{ github.workspace }}/temp/tools/commandline-tools/sdk/default/openharmony/native" >> $GITHUB_ENV
+        echo "OHOS_NATIVE_HOME=${{ github.workspace }}/commandline-tools/sdk/default/openharmony/native" >> $GITHUB_ENV
         echo "BASE_FLAGS=-Wno-error --sysroot=$OHOS_NATIVE_HOME/sysroot" >> $GITHUB_ENV
         echo "TOOLCHAIN=$OHOS_NATIVE_HOME/llvm" >> $GITHUB_ENV
         
@@ -66,8 +74,6 @@ jobs:
         echo "CGO_LDFLAGS=-extld=$LD --sysroot=$OHOS_NATIVE_HOME/sysroot --target=$target-linux-ohos" >> $GITHUB_ENV
         echo "sourceFile=./" >> $GITHUB_ENV
         echo "outputFile=./output/libohtest.so" >> $GITHUB_ENV
-
-        echo $GITHUB_ENV
 
         go build -buildmode c-shared -tags "ohos" -gcflags="all=-N -l" -o $outputFile $sourceFile
 
