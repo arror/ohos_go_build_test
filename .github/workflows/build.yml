@@ -36,12 +36,17 @@ jobs:
         
     - name: 构建二进制
       run: |
+
+        cd temp
+        ls -l
+        cd golang
+        ls -l
+        cd ../../
+        
         echo "GOROOT=${{ github.workspace }}/temp/golang" >> $GITHUB_ENV
         echo "${{ github.workspace }}/temp/golang/bin" >> $GITHUB_PATH
-        
-        which go
-        go env GOROOT
-        go env GOOS GOARCH
+
+        go env
 
         echo "arch=arm64" >> $GITHUB_ENV
         echo "target=aarch64" >> $GITHUB_ENV
