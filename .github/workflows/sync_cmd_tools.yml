@@ -1,0 +1,30 @@
+name: 同步 OpenHarmony 命令行工具
+
+on:
+  workflow_dispatch:
+    inputs:
+      download_url:
+        description: '下载链接'
+        required: true
+        type: string
+      file_name:
+        description: '保存的文件名'
+        required: true
+        type: string
+        default: 'commandline-tools.zip'
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    
+    steps:
+
+    - name: 下载文件
+      run: |
+        wget -O "${{ github.event.inputs.file_name }}" "${{ github.event.inputs.download_url }}"
+        
+    - name: 上传文件
+      uses: actions/upload-artifact@v4
+      with:
+        name: downloaded-file
+        path: ${{ github.event.inputs.file_name }}
