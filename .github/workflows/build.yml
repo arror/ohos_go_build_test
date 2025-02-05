@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: 下载当前源码
+      uses: actions/checkout@v3
+      
     - name: 下载 Golang
       uses: actions/download-artifact@v4
       with:
@@ -30,9 +33,6 @@ jobs:
         unzip go-build.zip
         cd ../tools
         unzip commandline-tools.zip
-
-    - name: 下载当前源码
-      uses: actions/checkout@v3
         
     - name: 构建二进制
       run: |
