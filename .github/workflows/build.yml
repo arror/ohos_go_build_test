@@ -44,9 +44,6 @@ jobs:
     - name: 解压
       run: |
         unzip commandline-tools.zip
-        ls -l
-        cd commandline-tools
-        ls -l
       
         
     - name: 构建二进制
