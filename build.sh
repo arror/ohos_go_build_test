@@ -6,7 +6,7 @@ target="aarch64"  # 可选值：x86_64, aarch64
 outdir="arm64-v8a"  # 可选值：x86_64, arm64-v8a
 
 # 设置 OHOS_NATIVE_HOME
-OHOS_NATIVE_HOME="command-line-tools/sdk/default/openharmony/native"
+OHOS_NATIVE_HOME="/home/runner/work/ohos_go_build_test/ohos_go_build_test/command-line-tools/sdk/default/openharmony/native"
 
 # 基础编译标志
 BASE_FLAGS="-Wno-error --sysroot=$OHOS_NATIVE_HOME/sysroot "
