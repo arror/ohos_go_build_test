@@ -1,7 +1,16 @@
-name: 构建测试文件
+name: 构建测试
 
 on:
   workflow_dispatch:  # 手动触发
+    inputs:
+      go_run_id:
+        description: 'Go构建工作流的运行ID'
+        required: true
+        type: string
+      tools_run_id:
+        description: '命令行工具工作流的运行ID'
+        required: true
+        type: string
 
 jobs:
   setup:
@@ -12,12 +21,14 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: go-build.zip
+        run-id: ${{ github.event.inputs.go_run_id }}
         path: downloads/go
 
     - name: 下载命令行工具
       uses: actions/download-artifact@v4
       with:
         name: commandline-tools.zip
+        run-id: ${{ github.event.inputs.tools_run_id }}
         path: downloads/tools
 
     - name: 解压文件
