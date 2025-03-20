@@ -16,6 +16,12 @@ jobs:
       with:
         repository: arror/log-adaptor
         path: LA
+
+    - name: 查看 Log-Adaptor 源码
+      run: |
+        ls -l
+        cd LA
+        ls -l
         
     - name: 下载 OpenHarmony CommandLine
       uses: actions/download-artifact@v4
