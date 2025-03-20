@@ -23,4 +23,4 @@ export GOARCH=arm64
 export CGO_CFLAGS="-I${LOG_ADAPTOR_HOME}/include -g -O2 `$LLVMCONFIG --cflags` --target=aarch64-linux-ohos --sysroot=$OHOS_NDK_HOME/native/sysroot"
 export CGO_LDFLAGS="--target=aarch64-linux-ohos -fuse-ld=lld -L${LOG_ADAPTOR_HOME}/dist/arm64-v8a"
 
-go build --tags fts5 -ldflags "-s -w" -buildmode=c-shared -v -o ./output/libohtest.so .
+go build --tags fts5 -ldflags "-s -w" -buildmode=c-shared -v -o ./output/libvpn.so .
