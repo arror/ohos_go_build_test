@@ -1,36 +1,26 @@
 #!/bin/bash
 
-# 设置架构和目标
-arch="arm64"  # 可选值：amd64, arm64
-target="aarch64"  # 可选值：x86_64, aarch64
-outdir="arm64-v8a"  # 可选值：x86_64, arm64-v8a
+export OHOS_NDK_HOME=/home/runner/work/ohos_go_build_test/ohos_go_build_test/command-line-tools/sdk/default/openharmony
+export LOG_ADAPTOR_HOME=/home/runner/work/ohos_go_build_test/ohos_go_build_test/LN/log-adaptor
 
-# 设置 OHOS_NATIVE_HOME
-OHOS_NATIVE_HOME="/home/runner/work/ohos_go_build_test/ohos_go_build_test/command-line-tools/sdk/default/openharmony/native"
+export CC=$OHOS_NDK_HOME/native/llvm/bin/clang
+export CXX=$OHOS_NDK_HOME/native/llvm/bin/clang++
+export AR=$OHOS_NDK_HOME/native/llvm/bin/llvm-ar
+export AS=$OHOS_NDK_HOME/native/llvm/bin/llvm-as
+export LD=$OHOS_NDK_HOME/native/llvm/bin/ld.lld
+export STRIP=$OHOS_NDK_HOME/native/llvm/bin/llvm-strip
+export RANLIB=$OHOS_NDK_HOME/native/llvm/bin/llvm-ranlib
+export OBJDUMP=$OHOS_NDK_HOME/native/llvm/bin/llvm-objdump
+export OBJCOPY=$OHOS_NDK_HOME/native/llvm/bin/llvm-objcopy
+export NM=$OHOS_NDK_HOME/native/llvm/bin/llvm-nm
+export CFLAGS="-target aarch64-linux-ohos --sysroot=${OHOS_NDK_HOME}/native/sysroot -D__MUSL__"
+export CXXFLAGS="-target aarch64-linux-ohos --sysroot=${OHOS_NDK_HOME}/native/sysroot -D__MUSL__"
+export LLVMCONFIG=$OHOS_NDK_HOME/native/llvm/bin/llvm-config
 
-# 基础编译标志
-BASE_FLAGS="-Wno-error --sysroot=$OHOS_NATIVE_HOME/sysroot "
+export CGO_ENABLED=1
+export GOOS=android
+export GOARCH=arm64
+export CGO_CFLAGS="-I${LOG_ADAPTOR_HOME}/include -g -O2 `$LLVMCONFIG --cflags` --target=aarch64-linux-ohos --sysroot=$OHOS_NDK_HOME/native/sysroot"
+export CGO_LDFLAGS="--target=aarch64-linux-ohos -fuse-ld=lld -L${LOG_ADAPTOR_HOME}/dist/arm64-v8a"
 
-# 工具链路径
-TOOLCHAIN="$OHOS_NATIVE_HOME/llvm"
-
-# 设置环境变量
-export CC="$TOOLCHAIN/bin/clang"
-export CXX="$TOOLCHAIN/bin/clang++"
-export LD="$TOOLCHAIN/bin/clang"
-export CGO_AR="$TOOLCHAIN/bin/llvm-ar"
-export GOASM="$TOOLCHAIN/bin/llvm-as"
-export GOOS="openharmony"
-export GOARCH="$arch"
-export GOARM=""
-export CGO_ENABLED="1"
-export CGO_CXXFLAGS=""
-export CGO_CFLAGS="-Wno-error --target=$target-linux-ohos $BASE_FLAGS"
-export CGO_LDFLAGS="-extld=$LD --sysroot=$OHOS_NATIVE_HOME/sysroot --target=$target-linux-ohos"
-
-# 源文件和输出文件
-sourceFile="./"
-outputFile="./output/libohtest.so"
-
-# 构建命令，生成共享库
-go build -buildmode c-shared -tags "ohos" -gcflags="all=-N -l" -o $outputFile $sourceFile
+go build --tags fts5 -ldflags "-s -w" -buildmode=c-shared -v -o ./output/libohtest.so .
