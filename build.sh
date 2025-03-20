@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export OHOS_NDK_HOME=/home/runner/work/ohos_go_build_test/ohos_go_build_test/command-line-tools/sdk/default/openharmony
-export LOG_ADAPTOR_HOME=/home/runner/work/ohos_go_build_test/ohos_go_build_test/LN
+export LOG_ADAPTOR_HOME=/home/runner/work/ohos_go_build_test/ohos_go_build_test/LA
 
 export CC=$OHOS_NDK_HOME/native/llvm/bin/clang
 export CXX=$OHOS_NDK_HOME/native/llvm/bin/clang++
